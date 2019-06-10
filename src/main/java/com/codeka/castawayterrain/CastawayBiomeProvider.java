@@ -20,8 +20,8 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private final SimplexNoiseGenerator noise;
 
-    private final double TEMPERATURE_SCALE = 500;
-    private final double DEPTH_SCALE = 100;
+    private final double TEMPERATURE_SCALE = 700;
+    private final double DEPTH_SCALE = 200;
 
     private enum Temperature {
         FROZEN,
@@ -43,7 +43,7 @@ public class CastawayBiomeProvider extends BiomeProvider {
             .put(Temperature.COLD, new Biome[] { Biomes.DEEP_COLD_OCEAN, Biomes.COLD_OCEAN})
             .put(Temperature.NORMAL, new Biome[] { Biomes.DEEP_OCEAN, Biomes.OCEAN})
             .put(Temperature.LUKEWARM, new Biome[] { Biomes.DEEP_LUKEWARM_OCEAN, Biomes.LUKEWARM_OCEAN, Biomes.BEACH})
-            .put(Temperature.WARM, new Biome[] { Biomes.DEEP_WARM_OCEAN, Biomes.WARM_OCEAN, Biomes.BEACH})
+            .put(Temperature.WARM, new Biome[] { Biomes.DEEP_WARM_OCEAN, Biomes.WARM_OCEAN})
             .build();
 
     public CastawayBiomeProvider(long seed) {
