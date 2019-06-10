@@ -1,4 +1,4 @@
-package com.codeka.castawayterrain;
+package com.codeka.castawayterrain.world;
 
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.OverworldChunkGenerator;

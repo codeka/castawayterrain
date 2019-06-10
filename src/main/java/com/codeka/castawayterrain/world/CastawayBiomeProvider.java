@@ -1,5 +1,6 @@
-package com.codeka.castawayterrain;
+package com.codeka.castawayterrain.world;
 
+import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -20,6 +21,12 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private final SimplexNoiseGenerator noise;
 
+    // Scale is the size of the area in which a volcano will spawn. Larger values = fewer volcanos.
+    private final double VOLCANO_SCALE = 1000;
+
+    // Size is the size of the volcano island itself. Large value = large island.
+    private final double VOLCANO_SIZE = 0.2;
+
     private final double TEMPERATURE_SCALE = 700;
     private final double DEPTH_SCALE = 200;
 
@@ -35,7 +42,7 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private final Biome[] allBiomes = new Biome[]{
             Biomes.OCEAN, Biomes.FROZEN_OCEAN, Biomes.BEACH, Biomes.DEEP_OCEAN, Biomes.SNOWY_BEACH, Biomes.WARM_OCEAN,
             Biomes.LUKEWARM_OCEAN, Biomes.COLD_OCEAN, Biomes.DEEP_WARM_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN,
-            Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_FROZEN_OCEAN
+            Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_FROZEN_OCEAN, VolcanoIslandBiome.BIOME
     };
 
     private final ImmutableMap<Temperature, Biome[]> biomesByDepth = ImmutableMap.<Temperature, Biome[]>builder()
@@ -54,6 +61,7 @@ public class CastawayBiomeProvider extends BiomeProvider {
     public Biome getBiome(int x, int y) {
         double t = (1.0 + noise.getValue((double) x / TEMPERATURE_SCALE, (double) y / TEMPERATURE_SCALE)) * 0.5;
         double d = (1.0 + noise.getValue((double) x / DEPTH_SCALE, (double) y / DEPTH_SCALE)) * 0.5;
+        double v = (1.0 + noise.getValue((double) x / VOLCANO_SCALE, (double) y / VOLCANO_SCALE)) * 0.5;
 
         Temperature temp;
         if (t < 0.1) {
@@ -66,6 +74,10 @@ public class CastawayBiomeProvider extends BiomeProvider {
             temp = Temperature.LUKEWARM;
         } else {
             temp = Temperature.WARM;
+        }
+
+        if (v < VOLCANO_SIZE) {
+            return VolcanoIslandBiome.BIOME;
         }
 
         Biome[] biomes = biomesByDepth.get(temp);

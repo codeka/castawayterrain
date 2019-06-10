@@ -1,4 +1,4 @@
-package com.codeka.castawayterrain;
+package com.codeka.castawayterrain.world;
 
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
