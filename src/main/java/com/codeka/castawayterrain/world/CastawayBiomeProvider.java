@@ -1,6 +1,8 @@
 package com.codeka.castawayterrain.world;
 
+import com.codeka.castawayterrain.biome.VolcanoIslandBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
+import com.codeka.castawayterrain.biome.VolcanoIslandForestBiome;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -22,13 +24,16 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private final SimplexNoiseGenerator noise;
 
     // Scale is the size of the area in which a volcano will spawn. Larger values = fewer volcanos.
-    private final double VOLCANO_SCALE = 1000;
+    private final int VOLCANO_SCALE = 1000;
 
     // Size is the size of the volcano island itself. Large value = large island.
-    private final double VOLCANO_SIZE = 0.2;
+    private final int VOLCANO_SIZE = 64;
 
     private final double TEMPERATURE_SCALE = 700;
     private final double DEPTH_SCALE = 200;
+
+    private final double NOISE_SCALE = 10;
+    private final double NOISE_VALUE = 0.05;
 
     private enum Temperature {
         FROZEN,
@@ -61,10 +66,12 @@ public class CastawayBiomeProvider extends BiomeProvider {
     public Biome getBiome(int x, int y) {
         double t = (1.0 + noise.getValue((double) x / TEMPERATURE_SCALE, (double) y / TEMPERATURE_SCALE)) * 0.5;
         double d = (1.0 + noise.getValue((double) x / DEPTH_SCALE, (double) y / DEPTH_SCALE)) * 0.5;
-        double v = (1.0 + noise.getValue((double) x / VOLCANO_SCALE, (double) y / VOLCANO_SCALE)) * 0.5;
+       // double v = (1.0 + noise.getValue((double) x / VOLCANO_SCALE, (double) y / VOLCANO_SCALE)) * 0.5;
+        double rand = noise.getValue((double) x / NOISE_SCALE, (double) y / NOISE_SCALE);
+        rand = 1.0 + (rand * NOISE_VALUE);
 
         Temperature temp;
-        if (t < 0.1) {
+        if ((t * rand) < 0.1) {
             temp = Temperature.FROZEN;
         } else if (t < 0.2) {
             temp = Temperature.COLD;
@@ -76,10 +83,32 @@ public class CastawayBiomeProvider extends BiomeProvider {
             temp = Temperature.WARM;
         }
 
-        if (v < VOLCANO_SIZE) {
-            return VolcanoIslandBiome.BIOME;
+        int vx = x / VOLCANO_SIZE;
+        int vy = y / VOLCANO_SIZE;
+        if (vx % (VOLCANO_SCALE / VOLCANO_SIZE) == 0 && vy % (VOLCANO_SCALE / VOLCANO_SIZE) == 0) {
+            // We're in the radius of a volcano. The Volcano islands start off being perfectly circular, but we add
+            // a bit of noise to break up the shoreline, etc.
+            double distanceToCenter = Math.sqrt((vx - x) * (vx - x) + (vy - y) * (vy - y));
+            distanceToCenter *= rand;
+            if (distanceToCenter < (VOLCANO_SIZE * 0.3)) {
+                return VolcanoIslandBiome.BIOME;
+            } else if (distanceToCenter < (VOLCANO_SIZE * 0.6)) {
+                return VolcanoIslandForestBiome.BIOME;
+            } else if (distanceToCenter < VOLCANO_SIZE) {
+                return VolcanoIslandBeachBiome.BIOME;
+            }
         }
-
+/*
+        if (v < VOLCANO_SIZE) {
+            if (v < (VOLCANO_SIZE * 0.4)) {
+                return VolcanoIslandBiome.BIOME;
+            } else if (v < (VOLCANO_SIZE * 0.7)) {
+                return VolcanoIslandForestBiome.BIOME;
+            } else {
+                return VolcanoIslandBeachBiome.BIOME;
+            }
+        }
+*/
         Biome[] biomes = biomesByDepth.get(temp);
         if (biomes.length > 2) {
             if (d < 0.1) {

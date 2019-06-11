@@ -11,7 +11,6 @@ public class VolcanoIslandBiome extends Biome {
 
     public static final VolcanoIslandBiome BIOME = new VolcanoIslandBiome();
 
-    public static final SurfaceBuilderConfig configSand = new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState());
     public static final SurfaceBuilderConfig configDirt = new SurfaceBuilderConfig(Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState());
     public static final SurfaceBuilderConfig configStone = new SurfaceBuilderConfig(Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState());
 
@@ -19,33 +18,15 @@ public class VolcanoIslandBiome extends Biome {
         super(new Biome.Builder()
                 .surfaceBuilder(new ConfiguredSurfaceBuilder<>(
                         new VolcanoSurfaceBuilder(SurfaceBuilderConfig::func_215455_a),
-                        new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState())))
+                        new SurfaceBuilderConfig(Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState())))
                 .precipitation(Biome.RainType.RAIN)
-                .category(Biome.Category.NONE)
-                .depth(4.5F)
-                .scale(0.0F)
-                .temperature(0.95F)
-                .downfall(0.3F)
+                .category(Category.EXTREME_HILLS)
+                .depth(1.5f)
+                .scale(1.0f)
+                .temperature(0.95f)
+                .downfall(0.3f)
                 .waterColor(4566514)
                 .waterFogColor(267827)
                 .parent(null));
-
-
-/*
-        super(new Biome.Builder()
-                .surfaceBuilder(new ConfiguredSurfaceBuilder<>(
-                        new MountainSurfaceBuilder(SurfaceBuilderConfig::func_215455_a),
-                        new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState())))
-                .precipitation(RainType.RAIN)
-                .category(Category.EXTREME_HILLS)
-                .depth(7.5F)
-                .scale(0.2F)
-                .temperature(3.F)
-                .downfall(0.3F)
-                .waterColor(4159204)
-                .waterFogColor(329011)
-                .parent(null));
-
- */
     }
 }
