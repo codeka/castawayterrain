@@ -22,11 +22,11 @@ public class VolcanoSurfaceBuilder extends DefaultSurfaceBuilder {
             double noise, @Nonnull BlockState defaultBlock, @Nonnull BlockState defaultFluid, int seaLevel, long seed,
             @Nonnull SurfaceBuilderConfig config) {
         if (noise > 2.6D) {
-            super.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, seed, config);
+            super.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, seed, VolcanoIslandBiome.configSand);
         } else if (noise > 0.8F) {
-            super.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, seed, config);
+            super.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, seed, VolcanoIslandBiome.configDirt);
         } else {
-            super.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, seed, config);
+            super.buildSurface(random, chunkIn, biomeIn, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, seed, VolcanoIslandBiome.configStone);
         }
     }
 }

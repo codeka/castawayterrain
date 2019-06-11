@@ -11,6 +11,10 @@ public class VolcanoIslandBiome extends Biome {
 
     public static final VolcanoIslandBiome BIOME = new VolcanoIslandBiome();
 
+    public static final SurfaceBuilderConfig configSand = new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState(), Blocks.SAND.getDefaultState());
+    public static final SurfaceBuilderConfig configDirt = new SurfaceBuilderConfig(Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState());
+    public static final SurfaceBuilderConfig configStone = new SurfaceBuilderConfig(Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState());
+
     VolcanoIslandBiome() {
         super(new Biome.Builder()
                 .surfaceBuilder(new ConfiguredSurfaceBuilder<>(
