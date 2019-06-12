@@ -1,10 +1,9 @@
 package com.codeka.castawayterrain.world;
 
-import com.codeka.castawayterrain.biome.VolcanoIslandBeachBiome;
+import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
+import com.codeka.castawayterrain.biome.Volcano;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
-import com.codeka.castawayterrain.biome.VolcanoIslandForestBiome;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -23,11 +22,6 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private final SimplexNoiseGenerator noise;
 
-    // Scale is the size of the area in which a volcano will spawn. Larger values = fewer volcanos.
-    private final int VOLCANO_SCALE = 1000;
-
-    // Size is the size of the volcano island itself. Large value = large island.
-    private final int VOLCANO_SIZE = 64;
 
     private final double TEMPERATURE_SCALE = 700;
     private final double DEPTH_SCALE = 200;
@@ -83,32 +77,18 @@ public class CastawayBiomeProvider extends BiomeProvider {
             temp = Temperature.WARM;
         }
 
-        int vx = x / VOLCANO_SIZE;
-        int vy = y / VOLCANO_SIZE;
-        if (vx % (VOLCANO_SCALE / VOLCANO_SIZE) == 0 && vy % (VOLCANO_SCALE / VOLCANO_SIZE) == 0) {
-            // We're in the radius of a volcano. The Volcano islands start off being perfectly circular, but we add
-            // a bit of noise to break up the shoreline, etc.
-            double distanceToCenter = Math.sqrt((vx - x) * (vx - x) + (vy - y) * (vy - y));
-            distanceToCenter *= rand;
-            if (distanceToCenter < (VOLCANO_SIZE * 0.3)) {
-                return VolcanoIslandBiome.BIOME;
-            } else if (distanceToCenter < (VOLCANO_SIZE * 0.6)) {
-                return VolcanoIslandForestBiome.BIOME;
-            } else if (distanceToCenter < VOLCANO_SIZE) {
-                return VolcanoIslandBeachBiome.BIOME;
-            }
+        // We're in the radius of a volcano. The Volcano islands start off being perfectly circular, but we add
+        // a bit of noise to break up the shoreline, etc.
+        double distanceToCenter = Volcano.distanceToCenter(noise, x, y);
+        if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.3) {
+            return VolcanoIslandBiome.BIOME;
+        } else if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.5) {
+            // Surround the volcano by beach.
+            return Biomes.BEACH;
+        } else if (distanceToCenter < Volcano.VOLCANO_SIZE) {
+            return ShallowWarmOceanBiome.BIOME;
         }
-/*
-        if (v < VOLCANO_SIZE) {
-            if (v < (VOLCANO_SIZE * 0.4)) {
-                return VolcanoIslandBiome.BIOME;
-            } else if (v < (VOLCANO_SIZE * 0.7)) {
-                return VolcanoIslandForestBiome.BIOME;
-            } else {
-                return VolcanoIslandBeachBiome.BIOME;
-            }
-        }
-*/
+
         Biome[] biomes = biomesByDepth.get(temp);
         if (biomes.length > 2) {
             if (d < 0.1) {
