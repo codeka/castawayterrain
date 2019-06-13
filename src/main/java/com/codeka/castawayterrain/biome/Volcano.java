@@ -22,6 +22,16 @@ public class Volcano {
 
         double volcanoCenterX = Math.round((double) x / VOLCANO_SCALE) * VOLCANO_SCALE;
         double volcanoCenterY = Math.round((double) y / VOLCANO_SCALE) * VOLCANO_SCALE;
+
+        // Randomize the center of the volcano a bit so it's not exactly at every 1000x block.
+        // Except for the one at 0,0 -- that's spawn
+        if (volcanoCenterX != 0 || volcanoCenterY != 0) {
+            double randX = noise.getValue(volcanoCenterX, volcanoCenterY);
+            double randY = noise.getValue(volcanoCenterX + 10, volcanoCenterY - 10);
+            volcanoCenterX += randX * VOLCANO_SIZE * 6;
+            volcanoCenterY += randY * VOLCANO_SIZE * 6;
+        }
+
         double distanceToCenter =
                 Math.sqrt((volcanoCenterX - x) * (volcanoCenterX - x) + (volcanoCenterY - y) * (volcanoCenterY - y));
         distanceToCenter *= rand;
