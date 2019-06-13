@@ -1,6 +1,7 @@
 package com.codeka.castawayterrain;
 
 import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
+import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import com.codeka.castawayterrain.world.CastawayWorldType;
 import net.minecraft.world.biome.Biome;
@@ -20,6 +21,7 @@ public class CastawayTerrainMod {
 
     public CastawayTerrainMod() {
         registerBiome("volcano_island", VolcanoIslandBiome.BIOME);
+        registerBiome("volcano_beach", VolcanoBeachBiome.BIOME);
         registerBiome("shallow_warm_ocean", ShallowWarmOceanBiome.BIOME);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

@@ -2,6 +2,7 @@ package com.codeka.castawayterrain.world;
 
 import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
 import com.codeka.castawayterrain.biome.Volcano;
+import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -84,7 +85,7 @@ public class CastawayBiomeProvider extends BiomeProvider {
             return VolcanoIslandBiome.BIOME;
         } else if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.5) {
             // Surround the volcano by beach.
-            return Biomes.BEACH;
+            return VolcanoBeachBiome.BIOME;
         } else if (distanceToCenter < Volcano.VOLCANO_SIZE) {
             return ShallowWarmOceanBiome.BIOME;
         }
