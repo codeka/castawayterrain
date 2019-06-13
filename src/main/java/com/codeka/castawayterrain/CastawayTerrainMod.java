@@ -3,7 +3,11 @@ package com.codeka.castawayterrain;
 import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
 import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
+import com.codeka.castawayterrain.block.VolcanoSmokerBlock;
 import com.codeka.castawayterrain.world.CastawayWorldType;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
@@ -23,6 +27,11 @@ public class CastawayTerrainMod {
         registerBiome("volcano_island", VolcanoIslandBiome.BIOME);
         registerBiome("volcano_beach", VolcanoBeachBiome.BIOME);
         registerBiome("shallow_warm_ocean", ShallowWarmOceanBiome.BIOME);
+
+        ForgeRegistries.BLOCKS.register(VolcanoSmokerBlock.BLOCK);
+        BlockItem blockItem = new BlockItem(VolcanoSmokerBlock.BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS));
+        ForgeRegistries.ITEMS.register(blockItem);
+        blockItem.addToBlockToItemMap(Item.BLOCK_TO_ITEM, blockItem);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     }
