@@ -1,33 +1,26 @@
 package com.codeka.castawayterrain.world;
 
-import com.codeka.castawayterrain.biome.Volcano;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
-import jdk.nashorn.internal.ir.visitor.SimpleNodeVisitor;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.OverworldChunkGenerator;
-import net.minecraft.world.gen.OverworldGenSettings;
-import net.minecraft.world.gen.SimplexNoiseGenerator;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraft.world.gen.ChunkGeneratorOverworld;
+import net.minecraft.world.gen.NoiseGeneratorSimplex;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
- * Chunk generator. We're basically {@link OverworldChunkGenerator}, except for how we generate
+ * Chunk generator. We're basically {@link ChunkGeneratorOverworld}, except for how we generate
  * {@link VolcanoIslandBiome}s.
  */
-public class CastawayChunkGenerator extends OverworldChunkGenerator {
-    private final SimplexNoiseGenerator noise;
+public class CastawayChunkGenerator extends ChunkGeneratorOverworld {
+    private final NoiseGeneratorSimplex noise;
 
-    public CastawayChunkGenerator(IWorld world) {
-        super(world, new CastawayBiomeProvider(world.getSeed()), new OverworldGenSettings());
+    public CastawayChunkGenerator(World world) {
+        super(world, world.getSeed(), false,
+                "{}");
 
-        noise = new SimplexNoiseGenerator(new Random(seed));
+        noise = new NoiseGeneratorSimplex(new Random(world.getSeed()));
     }
 
     /**
@@ -35,8 +28,9 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
      * just inherit the default processing.
      */
     @Override
-    public void generateSurface(IChunk chunk) {
-        Biome[] biomes = chunk.getBiomes();
+    public void setBlocksInChunk(int x, int z, @Nonnull ChunkPrimer primer) {
+        super.setBlocksInChunk(x, z, primer);
+/*        Biome[] biomes = chunk.getBiomes();
         boolean hasVolcano = false;
         for (Biome biome : biomes) {
             if (biome == VolcanoIslandBiome.BIOME) {
@@ -49,7 +43,7 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
             super.generateSurface(chunk);
         }
 
-        generateSurfaceWithVolcanos(chunk);
+        generateSurfaceWithVolcanos(chunk);*/
     }
 
     /**
@@ -57,7 +51,7 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
      * {@link net.minecraft.world.gen.NoiseChunkGenerator} to generate the initial terrain, then we call our special
      * method on the blocks that are in a volcano biome.
      */
-    private void generateSurfaceWithVolcanos(IChunk chunk) {
+/*    private void generateSurfaceWithVolcanos(IChunk chunk) {
         super.generateSurface(chunk);
 
         ChunkPos chunkPos = chunk.getPos();
@@ -102,5 +96,5 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
                 }
             }
         }
-    }
+    }*/
 }

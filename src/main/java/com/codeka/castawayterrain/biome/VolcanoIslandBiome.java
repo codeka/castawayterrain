@@ -1,57 +1,56 @@
 package com.codeka.castawayterrain.biome;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
+import net.minecraft.world.chunk.ChunkPrimer;
+
+import java.util.Random;
 
 
 public class VolcanoIslandBiome extends Biome {
 
     public static final VolcanoIslandBiome BIOME = new VolcanoIslandBiome();
 
-    private static final VolcanoIslandSurfaceBuilderConfig SURFACE_BUILDER_CONFIG = new VolcanoIslandSurfaceBuilderConfig();
-
     VolcanoIslandBiome() {
-        super(new Biome.Builder()
-                .surfaceBuilder(new ConfiguredSurfaceBuilder<>(
-                        new VolcanoIslandSurfaceBuilder(SURFACE_BUILDER_CONFIG), new VolcanoIslandSurfaceBuilderConfig()))
-                .precipitation(Biome.RainType.RAIN)
-                .category(Category.EXTREME_HILLS)
-                // We keep depth & scale low so the OverworldChunkGenerator thinks the island is at sea level and
-                // generates the surrounding terrain correctly.
-                .depth(0.0f)
-                .scale(0.2f)
-                .temperature(0.95f)
-                .downfall(0.3f)
-                .waterColor(4445678)
-                .waterFogColor(270131)
-                .parent(null));
-
-        DefaultBiomeFeatures.func_222338_N(this);
-
-        DefaultBiomeFeatures.func_222302_w(this);
-        DefaultBiomeFeatures.func_222342_U(this);
-        DefaultBiomeFeatures.func_222298_O(this);
-        DefaultBiomeFeatures.func_222315_Z(this);
-        DefaultBiomeFeatures.func_222311_aa(this);
-        DefaultBiomeFeatures.func_222337_am(this);
-
-
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.SHEEP, 12, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.PIG, 10, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.CHICKEN, 10, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.COW, 8, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.WOLF, 5, 4, 4));
-        addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(EntityType.BAT, 10, 8, 8));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.SPIDER, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.ZOMBIE, 95, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.ZOMBIE_VILLAGER, 5, 1, 1));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.SKELETON, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.CREEPER, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.SLIME, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.ENDERMAN, 10, 1, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.WITCH, 5, 1, 1));
+        super(new BiomeProperties("volcano_island")
+                .setWaterColor(4445678));
     }
+/*
+    @Override
+    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noise) {
+        int cx = x & 15;
+        int cz = z & 15;
+        int y = 255;
+        for (; y > 0; y++) {
+            if (chunkPrimerIn.getBlockState(cx, y, cz) != Blocks.AIR.getDefaultState()) {
+                break;
+            }
+        }
+        if (noise < 0.2) {
+            // lava part
+            for(; y > worldIn.getSeaLevel(); y--) {
+                chunkPrimerIn.setBlockState(cx, y, cz, Blocks.LAVA.getDefaultState());
+            }
+            for(; y > 0; y--) {
+                chunkPrimerIn.setBlockState(cx, y, cz, Blocks.STONE.getDefaultState());
+            }
+        } else if (noise < 0.7) {
+            // mountain part
+            for(; y > 0; y--) {
+                chunkPrimerIn.setBlockState(cx, y, cz, Blocks.STONE.getDefaultState());
+            }
+        } else {
+            // grassy part
+            chunkPrimerIn.setBlockState(cx, y, cz, Blocks.GRASS.getDefaultState());
+            for(int dy = 0; dy < 5; dy++) {
+                y--;
+                chunkPrimerIn.setBlockState(cx, y, cz, Blocks.DIRT.getDefaultState());
+            }
+            for(; y > 0; y--) {
+                chunkPrimerIn.setBlockState(cx, y, cz, Blocks.STONE.getDefaultState());
+            }
+        }
+        chunkPrimerIn.setBlockState(cx, y, cz, Blocks.BEDROCK.getDefaultState());
+    }*/
 }

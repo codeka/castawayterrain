@@ -1,6 +1,6 @@
 package com.codeka.castawayterrain.biome;
 
-import net.minecraft.world.gen.SimplexNoiseGenerator;
+import net.minecraft.world.gen.NoiseGeneratorSimplex;
 
 public class Volcano {
     // Scale is the size of the area in which a volcano will spawn. Larger values = fewer volcanos.
@@ -14,9 +14,9 @@ public class Volcano {
 
     /**
      * Calculates the distance of the given (x,y) coords to the nearest volcano. You must always use the same exact
-     * instance of {@link SimplexNoiseGenerator}.
+     * instance of {@link NoiseGeneratorSimplex}.
      */
-    public static double distanceToCenter(SimplexNoiseGenerator noise, int x, int y) {
+    public static double distanceToCenter(NoiseGeneratorSimplex noise, int x, int y) {
         double rand = noise.getValue((double) x / VOLCANO_NOISE_SCALE, (double) y / VOLCANO_NOISE_SCALE);
         rand = 1.0 + (rand * VOLCANO_NOISE_VALUE);
 

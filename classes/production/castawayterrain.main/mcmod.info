@@ -1,0 +1,11 @@
+[
+    {
+        "modid": "castawayterrain",
+        "name": "Castaway Terrain",
+        "description": "Generates volcano island biomes.",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "https://github.com/codeka/castawayterrain",
+        "authorList": ["Codeka"],
+    }
+]
