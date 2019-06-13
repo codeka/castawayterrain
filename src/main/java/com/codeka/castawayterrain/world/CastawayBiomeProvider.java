@@ -10,7 +10,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.WarmOceanBiome;
 import net.minecraft.world.biome.provider.BiomeProvider;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.SimplexNoiseGenerator;
 import net.minecraft.world.gen.feature.structure.Structure;
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +44,8 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private final Biome[] allBiomes = new Biome[]{
             Biomes.OCEAN, Biomes.FROZEN_OCEAN, Biomes.BEACH, Biomes.DEEP_OCEAN, Biomes.SNOWY_BEACH, Biomes.WARM_OCEAN,
             Biomes.LUKEWARM_OCEAN, Biomes.COLD_OCEAN, Biomes.DEEP_WARM_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN,
-            Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_FROZEN_OCEAN, VolcanoIslandBiome.BIOME
+            Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_FROZEN_OCEAN, VolcanoIslandBiome.BIOME, VolcanoBeachBiome.BIOME,
+            ShallowWarmOceanBiome.BIOME,
     };
 
     private final ImmutableMap<Temperature, Biome[]> biomesByDepth = ImmutableMap.<Temperature, Biome[]>builder()
@@ -55,6 +58,11 @@ public class CastawayBiomeProvider extends BiomeProvider {
 
     public CastawayBiomeProvider(long seed) {
         noise = new SimplexNoiseGenerator(new Random(seed));
+
+        // Remove all underground ores from all our biomes. TODO: how to only do this for our world type?
+        for (Biome b : allBiomes) {
+            b.getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).clear();
+        }
     }
 
     @Override
