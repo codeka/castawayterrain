@@ -30,6 +30,7 @@ public class CastawayTerrainMod {
 
         ForgeRegistries.BLOCKS.register(VolcanoSmokerBlock.BLOCK);
         BlockItem blockItem = new BlockItem(VolcanoSmokerBlock.BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS));
+        blockItem.setRegistryName("volcano_smoker");
         ForgeRegistries.ITEMS.register(blockItem);
         blockItem.addToBlockToItemMap(Item.BLOCK_TO_ITEM, blockItem);
 

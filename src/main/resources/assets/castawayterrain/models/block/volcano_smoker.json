@@ -1,0 +1,9 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "particle": "castawayterrain:block/volcano_smoker",
+        "bottom": "block/stone",
+        "top": "castawayterrain:block/volcano_smoker",
+        "side": "block/stone"
+    }
+}
