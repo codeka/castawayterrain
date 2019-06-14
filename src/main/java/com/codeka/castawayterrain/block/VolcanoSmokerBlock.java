@@ -2,18 +2,23 @@ package com.codeka.castawayterrain.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.CampfireTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.extensions.IForgeBlock;
 
 import java.util.Random;
 
-public class VolcanoSmokerBlock extends Block implements IWaterLoggable {
+public class VolcanoSmokerBlock extends Block implements IWaterLoggable, IForgeBlock {
     public static final VolcanoSmokerBlock BLOCK = new VolcanoSmokerBlock();
 
     private VolcanoSmokerBlock() {
@@ -41,4 +46,13 @@ public class VolcanoSmokerBlock extends Block implements IWaterLoggable {
         }
     }
 
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new VolcanoSmokerTileEntity();
+    }
 }

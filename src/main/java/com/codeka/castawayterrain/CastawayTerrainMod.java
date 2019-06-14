@@ -4,6 +4,7 @@ import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
 import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import com.codeka.castawayterrain.block.VolcanoSmokerBlock;
+import com.codeka.castawayterrain.block.VolcanoSmokerTileEntity;
 import com.codeka.castawayterrain.world.CastawayWorldType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -15,12 +16,16 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Main mod entrypoint for CastawayTerrain. We just register our custom world type.
  */
 @Mod("castawayterrain")
 public class CastawayTerrainMod {
+    private static final Logger L = LogManager.getLogger();
+
     public CastawayWorldType castawayWorldType;
 
     public CastawayTerrainMod() {
@@ -34,6 +39,8 @@ public class CastawayTerrainMod {
         ForgeRegistries.ITEMS.register(blockItem);
         blockItem.addToBlockToItemMap(Item.BLOCK_TO_ITEM, blockItem);
 
+        ForgeRegistries.TILE_ENTITIES.register(VolcanoSmokerTileEntity.TILE_ENTITY_TYPE);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     }
 
@@ -46,6 +53,5 @@ public class CastawayTerrainMod {
         ForgeRegistries.BIOMES.register(biome);
         BiomeManager.addSpawnBiome(biome);
         BiomeDictionary.addTypes(biome, BiomeDictionary.Type.MOUNTAIN); // TODO??
-
     }
 }

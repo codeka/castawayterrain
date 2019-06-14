@@ -25,7 +25,6 @@ public class CastawayBiomeProvider extends BiomeProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private final SimplexNoiseGenerator noise;
 
-
     private final double TEMPERATURE_SCALE = 700;
     private final double DEPTH_SCALE = 200;
 
