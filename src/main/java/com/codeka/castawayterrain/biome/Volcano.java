@@ -1,8 +1,12 @@
 package com.codeka.castawayterrain.biome;
 
 import net.minecraft.world.gen.SimplexNoiseGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Volcano {
+    private static final Logger L = LogManager.getLogger();
+
     // Scale is the size of the area in which a volcano will spawn. Larger values = fewer volcanos.
     public final static int VOLCANO_SCALE = 1000;
 
@@ -37,5 +41,22 @@ public class Volcano {
         distanceToCenter *= rand;
 
         return distanceToCenter;
+    }
+
+    public static boolean isCenter(SimplexNoiseGenerator noise, int x, int y) {
+        double volcanoCenterX = Math.round((double) x / VOLCANO_SCALE) * VOLCANO_SCALE;
+        double volcanoCenterY = Math.round((double) y / VOLCANO_SCALE) * VOLCANO_SCALE;
+
+        // Randomize the center of the volcano a bit so it's not exactly at every 1000x block.
+        // Except for the one at 0,0 -- that's spawn
+        if (volcanoCenterX != 0 || volcanoCenterY != 0) {
+            double randX = noise.getValue(volcanoCenterX, volcanoCenterY);
+            double randY = noise.getValue(volcanoCenterX + 10, volcanoCenterY - 10);
+            volcanoCenterX += randX * VOLCANO_SIZE * 6;
+            volcanoCenterY += randY * VOLCANO_SIZE * 6;
+        }
+
+        L.info("isCenter(" + x + ", " + y + ") == " + Math.round(volcanoCenterX) + ", " + Math.round(volcanoCenterY));
+        return x == Math.round(volcanoCenterX) && y == Math.round(volcanoCenterY);
     }
 }

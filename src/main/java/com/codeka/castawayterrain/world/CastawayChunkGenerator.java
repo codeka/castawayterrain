@@ -14,6 +14,8 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.OverworldChunkGenerator;
 import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraft.world.gen.SimplexNoiseGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
@@ -22,6 +24,7 @@ import java.util.Random;
  * {@link VolcanoIslandBiome}s.
  */
 public class CastawayChunkGenerator extends OverworldChunkGenerator {
+    private static final Logger L = LogManager.getLogger();
     private final SimplexNoiseGenerator noise;
 
     public CastawayChunkGenerator(IWorld world) {
@@ -80,10 +83,15 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
 
                     double distanceToCenter = Volcano.distanceToCenter(noise, px, pz);
                     double noiseValue;
-                    if (distanceToCenter < 6) {
+                    if (distanceToCenter < 4) {
                         // It's the lava part
-                        startHeight = world.getSeaLevel() + 25;
-                        noiseValue = 0.1;
+                        startHeight = world.getSeaLevel() + 35;
+                        if (Volcano.isCenter(noise, px, pz)) {
+                            L.info("Adding smoker @ " + px + "," + pz);
+                            noiseValue = 0.0;
+                        } else {
+                            noiseValue = 0.1;
+                        }
                     } else if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.15) {
                         // It's the mountain part
                         double factor = 1.0 - (distanceToCenter / (Volcano.VOLCANO_SIZE * 0.15));
