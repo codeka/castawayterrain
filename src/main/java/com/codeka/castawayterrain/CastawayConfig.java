@@ -1,0 +1,21 @@
+package com.codeka.castawayterrain;
+
+import io.github.cottonmc.cotton.config.ConfigManager;
+import io.github.cottonmc.cotton.config.annotations.ConfigFile;
+import io.github.cottonmc.repackage.blue.endless.jankson.Comment;
+
+@ConfigFile(name="CastawayTerrain")
+public class CastawayConfig {
+    public static final CastawayConfig instance;
+
+    static {
+        instance = ConfigManager.loadConfig(CastawayConfig.class);
+        ConfigManager.saveConfig(instance);
+    }
+
+    @Comment("Average distance between volcano islands: lower value = more volcano islands.")
+    public int volcano_island_frequency = 1000;
+
+    @Comment("Size of the volcano island (including surround shallow ocean) in blocks. Changing this will basically scale everything up/down.")
+    public int volcano_size = 128;
+}

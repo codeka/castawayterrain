@@ -1,5 +1,6 @@
 package com.codeka.castawayterrain.world;
 
+import com.codeka.castawayterrain.CastawayConfig;
 import com.codeka.castawayterrain.biome.Volcano;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import net.minecraft.util.math.ChunkPos;
@@ -87,14 +88,14 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
                         } else {
                             noiseValue = 0.1;
                         }
-                    } else if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.15) {
+                    } else if (distanceToCenter < CastawayConfig.instance.volcano_size * 0.15) {
                         // It's the mountain part
-                        double factor = 1.0 - (distanceToCenter / (Volcano.VOLCANO_SIZE * 0.15));
+                        double factor = 1.0 - (distanceToCenter / (CastawayConfig.instance.volcano_size * 0.15));
                         startHeight += (factor * factor * 60) + (noise.sample(px, pz)) + 5;
                         noiseValue = 0.5;
                     } else {
                         // It's the grassy/forest-y part.
-                        double factor = 1.0 - (distanceToCenter / (Volcano.VOLCANO_SIZE * 0.3));
+                        double factor = 1.0 - (distanceToCenter / (CastawayConfig.instance.volcano_size * 0.3));
                         startHeight += (factor * 5);
                         noiseValue = 1.0;
                     }

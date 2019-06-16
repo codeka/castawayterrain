@@ -3,6 +3,13 @@ plugins {
     id 'fabric-loom' version '0.2.3-SNAPSHOT'
 }
 
+repositories {
+    maven {
+        name = 'Cottom'
+        url = 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
+    }
+}
+
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
@@ -17,7 +24,9 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}"
     modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
     modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modCompile "io.github.cottonmc:cotton:0.7.5+1.14.2-SNAPSHOT"
 }
+
 processResources {
     inputs.property "version", project.version
 

@@ -1,5 +1,6 @@
 package com.codeka.castawayterrain.world;
 
+import com.codeka.castawayterrain.CastawayConfig;
 import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
 import com.codeka.castawayterrain.biome.Volcano;
 import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
@@ -24,11 +25,13 @@ public class CastawayBiomeSource extends BiomeSource {
     private static final Logger L = LogManager.getLogger();
     private final SimplexNoiseSampler noise;
 
-    private final double TEMPERATURE_SCALE = 700;
-    private final double DEPTH_SCALE = 200;
-
-    private final double NOISE_SCALE = 10;
-    private final double NOISE_VALUE = 0.05;
+    // These parameters are used to generate the ocean biomes, they're not configurable. I could make them
+    // configurable, but I think they're not that important and it might just be too confusing -- the most
+    // important thing to configure is the island generation.
+    private static final double TEMPERATURE_SCALE = 700;
+    private static final double DEPTH_SCALE = 200;
+    private static final double NOISE_SCALE = 10;
+    private static final double NOISE_VALUE = 0.05;
 
     private enum Temperature {
         FROZEN,
@@ -38,13 +41,7 @@ public class CastawayBiomeSource extends BiomeSource {
         WARM,
     }
 
-    // TODO: this duplicates the list in biomesByDepth, we could calculate it from the other.
-    private final Biome[] allBiomes = new Biome[]{
-            Biomes.OCEAN, Biomes.FROZEN_OCEAN, Biomes.BEACH, Biomes.DEEP_OCEAN, Biomes.SNOWY_BEACH, Biomes.WARM_OCEAN,
-            Biomes.LUKEWARM_OCEAN, Biomes.COLD_OCEAN, Biomes.DEEP_WARM_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN,
-            Biomes.DEEP_COLD_OCEAN, Biomes.DEEP_FROZEN_OCEAN, VolcanoIslandBiome.BIOME, VolcanoBeachBiome.BIOME,
-            ShallowWarmOceanBiome.BIOME,
-    };
+    private final Set<Biome> allBiomes;
 
     private final ImmutableMap<Temperature, Biome[]> biomesByDepth = ImmutableMap.<Temperature, Biome[]>builder()
             .put(Temperature.FROZEN, new Biome[] { Biomes.DEEP_FROZEN_OCEAN, Biomes.FROZEN_OCEAN, Biomes.SNOWY_BEACH })
@@ -57,6 +54,12 @@ public class CastawayBiomeSource extends BiomeSource {
     public CastawayBiomeSource(long seed) {
         noise = new SimplexNoiseSampler(new Random(seed));
 
+        allBiomes = new HashSet<>();
+        allBiomes.addAll(Arrays.asList(VolcanoIslandBiome.BIOME, VolcanoBeachBiome.BIOME, ShallowWarmOceanBiome.BIOME));
+        for (Map.Entry<Temperature, Biome[]> entry : biomesByDepth.entrySet()) {
+            allBiomes.addAll(Arrays.asList(entry.getValue()));
+        }
+
         // Remove all underground ores from all our biomes. TODO: how to only do this for our world type?
         for (Biome b : allBiomes) {
             b.getFeaturesForStep(UNDERGROUND_ORES).clear();
@@ -67,7 +70,6 @@ public class CastawayBiomeSource extends BiomeSource {
     public Biome getBiome(int x, int y) {
         double t = (1.0 + noise.sample((double) x / TEMPERATURE_SCALE, (double) y / TEMPERATURE_SCALE)) * 0.5;
         double d = (1.0 + noise.sample((double) x / DEPTH_SCALE, (double) y / DEPTH_SCALE)) * 0.5;
-       // double v = (1.0 + noise.getValue((double) x / VOLCANO_SCALE, (double) y / VOLCANO_SCALE)) * 0.5;
         double rand = noise.sample((double) x / NOISE_SCALE, (double) y / NOISE_SCALE);
         rand = 1.0 + (rand * NOISE_VALUE);
 
@@ -84,15 +86,16 @@ public class CastawayBiomeSource extends BiomeSource {
             temp = Temperature.WARM;
         }
 
-        // We're in the radius of a volcano. The Volcano islands start off being perfectly circular, but we add
-        // a bit of noise to break up the shoreline, etc.
+        // We're in the radius of a volcano.
         double distanceToCenter = Volcano.distanceToCenter(noise, x, y);
-        if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.3) {
+        if (distanceToCenter < CastawayConfig.instance.volcano_size * 0.3) {
+            // The actual volcano part of the island (trees + mountain)
             return VolcanoIslandBiome.BIOME;
-        } else if (distanceToCenter < Volcano.VOLCANO_SIZE * 0.5) {
+        } else if (distanceToCenter < CastawayConfig.instance.volcano_size * 0.5) {
             // Surround the volcano by beach.
             return VolcanoBeachBiome.BIOME;
-        } else if (distanceToCenter < Volcano.VOLCANO_SIZE) {
+        } else if (distanceToCenter < CastawayConfig.instance.volcano_size) {
+            // And the beach by "shallow warm ocean".
             return ShallowWarmOceanBiome.BIOME;
         }
 
@@ -112,7 +115,6 @@ public class CastawayBiomeSource extends BiomeSource {
 
     @Override
     public Biome[] sampleBiomes(int x, int z, int width, int length, boolean cacheFlag) {
-        L.info("sampleBiomes(" + x + "," + z + ")");
         Biome[] biomes = new Biome[width * length];
         for (int dx = 0; dx < width; dx++) {
             for (int dy = 0; dy < length; dy++) {

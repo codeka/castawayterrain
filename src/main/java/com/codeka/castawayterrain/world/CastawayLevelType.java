@@ -1,6 +1,5 @@
 package com.codeka.castawayterrain.world;
 
-import net.minecraft.world.World;
 import net.minecraft.world.level.LevelGeneratorType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
