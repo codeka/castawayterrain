@@ -1,11 +1,10 @@
 package com.codeka.castawayterrain.biome;
 
-import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
-
+import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
 
 public class VolcanoIslandBiome extends Biome {
 
@@ -14,10 +13,10 @@ public class VolcanoIslandBiome extends Biome {
     private static final VolcanoIslandSurfaceBuilderConfig SURFACE_BUILDER_CONFIG = new VolcanoIslandSurfaceBuilderConfig();
 
     VolcanoIslandBiome() {
-        super(new Biome.Builder()
+        super(new Biome.Settings()
                 .surfaceBuilder(new ConfiguredSurfaceBuilder<>(
                         new VolcanoIslandSurfaceBuilder(SURFACE_BUILDER_CONFIG), new VolcanoIslandSurfaceBuilderConfig()))
-                .precipitation(Biome.RainType.RAIN)
+                .precipitation(Precipitation.RAIN)
                 .category(Category.EXTREME_HILLS)
                 // We keep depth & scale low so the OverworldChunkGenerator thinks the island is at sea level and
                 // generates the surrounding terrain correctly.
@@ -29,29 +28,26 @@ public class VolcanoIslandBiome extends Biome {
                 .waterFogColor(270131)
                 .parent(null));
 
-        DefaultBiomeFeatures.func_222338_N(this);
+        DefaultBiomeFeatures.addForestFlowers(this);
+        DefaultBiomeFeatures.addForestTrees(this);
+        DefaultBiomeFeatures.addDefaultFlowers(this);
+        DefaultBiomeFeatures.addForestGrass(this);
+        DefaultBiomeFeatures.addDefaultMushrooms(this);
+        DefaultBiomeFeatures.addDefaultVegetation(this);
 
-        DefaultBiomeFeatures.func_222302_w(this);
-        DefaultBiomeFeatures.func_222342_U(this);
-        DefaultBiomeFeatures.func_222298_O(this);
-        DefaultBiomeFeatures.func_222315_Z(this);
-        DefaultBiomeFeatures.func_222311_aa(this);
-        DefaultBiomeFeatures.func_222337_am(this);
-
-
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.SHEEP, 12, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.PIG, 10, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.CHICKEN, 10, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.COW, 8, 4, 4));
-        addSpawn(EntityClassification.CREATURE, new SpawnListEntry(EntityType.WOLF, 5, 4, 4));
-        addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(EntityType.BAT, 10, 8, 8));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.SPIDER, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.ZOMBIE, 95, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.ZOMBIE_VILLAGER, 5, 1, 1));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.SKELETON, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.CREEPER, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.SLIME, 100, 4, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.ENDERMAN, 10, 1, 4));
-        addSpawn(EntityClassification.MONSTER, new SpawnListEntry(EntityType.WITCH, 5, 1, 1));
+        addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.SHEEP, 12, 4, 4));
+        addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.PIG, 10, 4, 4));
+        addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.CHICKEN, 10, 4, 4));
+        addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.COW, 8, 4, 4));
+        addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.WOLF, 5, 4, 4));
+        addSpawn(EntityCategory.AMBIENT, new SpawnEntry(EntityType.BAT, 10, 8, 8));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SPIDER, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 95, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE_VILLAGER, 5, 1, 1));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SKELETON, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.CREEPER, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SLIME, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ENDERMAN, 10, 1, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.WITCH, 5, 1, 1));
     }
 }

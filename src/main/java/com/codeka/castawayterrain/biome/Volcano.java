@@ -1,6 +1,6 @@
 package com.codeka.castawayterrain.biome;
 
-import net.minecraft.world.gen.SimplexNoiseGenerator;
+import net.minecraft.util.math.noise.SimplexNoiseSampler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,10 +18,10 @@ public class Volcano {
 
     /**
      * Calculates the distance of the given (x,y) coords to the nearest volcano. You must always use the same exact
-     * instance of {@link SimplexNoiseGenerator}.
+     * instance of {@link SimplexNoiseSampler}.
      */
-    public static double distanceToCenter(SimplexNoiseGenerator noise, int x, int y) {
-        double rand = noise.getValue((double) x / VOLCANO_NOISE_SCALE, (double) y / VOLCANO_NOISE_SCALE);
+    public static double distanceToCenter(SimplexNoiseSampler noise, int x, int y) {
+        double rand = noise.sample((double) x / VOLCANO_NOISE_SCALE, (double) y / VOLCANO_NOISE_SCALE);
         rand = 1.0 + (rand * VOLCANO_NOISE_VALUE);
 
         double volcanoCenterX = Math.round((double) x / VOLCANO_SCALE) * VOLCANO_SCALE;
@@ -30,8 +30,8 @@ public class Volcano {
         // Randomize the center of the volcano a bit so it's not exactly at every 1000x block.
         // Except for the one at 0,0 -- that's spawn
         if (volcanoCenterX != 0 || volcanoCenterY != 0) {
-            double randX = noise.getValue(volcanoCenterX, volcanoCenterY);
-            double randY = noise.getValue(volcanoCenterX + 10, volcanoCenterY - 10);
+            double randX = noise.sample(volcanoCenterX, volcanoCenterY);
+            double randY = noise.sample(volcanoCenterX + 10, volcanoCenterY - 10);
             volcanoCenterX += randX * VOLCANO_SIZE * 6;
             volcanoCenterY += randY * VOLCANO_SIZE * 6;
         }
@@ -43,15 +43,15 @@ public class Volcano {
         return distanceToCenter;
     }
 
-    public static boolean isCenter(SimplexNoiseGenerator noise, int x, int y) {
+    public static boolean isCenter(SimplexNoiseSampler noise, int x, int y) {
         double volcanoCenterX = Math.round((double) x / VOLCANO_SCALE) * VOLCANO_SCALE;
         double volcanoCenterY = Math.round((double) y / VOLCANO_SCALE) * VOLCANO_SCALE;
 
         // Randomize the center of the volcano a bit so it's not exactly at every 1000x block.
         // Except for the one at 0,0 -- that's spawn
         if (volcanoCenterX != 0 || volcanoCenterY != 0) {
-            double randX = noise.getValue(volcanoCenterX, volcanoCenterY);
-            double randY = noise.getValue(volcanoCenterX + 10, volcanoCenterY - 10);
+            double randX = noise.sample(volcanoCenterX, volcanoCenterY);
+            double randY = noise.sample(volcanoCenterX + 10, volcanoCenterY - 10);
             volcanoCenterX += randX * VOLCANO_SIZE * 6;
             volcanoCenterY += randY * VOLCANO_SIZE * 6;
         }

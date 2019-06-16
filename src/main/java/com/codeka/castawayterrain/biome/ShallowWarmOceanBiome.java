@@ -1,32 +1,27 @@
 package com.codeka.castawayterrain.biome;
 
-import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.SingleRandomFeature;
-import net.minecraft.world.gen.feature.structure.OceanRuinConfig;
-import net.minecraft.world.gen.feature.structure.OceanRuinStructure;
-import net.minecraft.world.gen.feature.structure.ShipwreckConfig;
-import net.minecraft.world.gen.placement.ChanceConfig;
-import net.minecraft.world.gen.placement.CountConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.gen.placement.TopSolidWithNoiseConfig;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.decorator.TopSolidHeightmapNoiseBiasedDecoratorConfig;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**
- * This is a cut'n'paste of {@link net.minecraft.world.biome.WarmOceanBiome}, but shallower.
+ * This is a cut'n'paste of {@link net.minecraft.world.biome.OceanWarmBiome}, but shallower.
  */
 public class ShallowWarmOceanBiome extends Biome {
     public static final ShallowWarmOceanBiome BIOME = new ShallowWarmOceanBiome();
 
     public ShallowWarmOceanBiome() {
-        super(new Builder()
-                .func_222351_a(SurfaceBuilder.field_215396_G, SurfaceBuilder.field_215391_B)
-                .precipitation(RainType.RAIN)
+        super(new Settings()
+                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.SAND_SAND_UNDERWATER_CONFIG)
+                .precipitation(Precipitation.RAIN)
                 .category(Category.OCEAN
                 ).depth(-0.3F)
                 .scale(0.03F)
@@ -35,84 +30,59 @@ public class ShallowWarmOceanBiome extends Biome {
                 .waterColor(4445678)
                 .waterFogColor(270131)
                 .parent(null));
-        addStructure(
+        addStructureFeature(
                 Feature.OCEAN_RUIN,
-                new OceanRuinConfig(OceanRuinStructure.Type.WARM, 0.3F, 0.9F));
-        addStructure(
+                new OceanRuinFeatureConfig(OceanRuinFeature.BiomeType.WARM, 0.3F, 0.9F));
+        addStructureFeature(
                 Feature.SHIPWRECK,
-                new ShipwreckConfig(false));
+                new ShipwreckFeatureConfig(false));
 
-        DefaultBiomeFeatures.func_222346_b(this);
-        DefaultBiomeFeatures.func_222295_c(this);
-        DefaultBiomeFeatures.func_222333_d(this);
-        DefaultBiomeFeatures.func_222335_f(this);
-        DefaultBiomeFeatures.func_222326_g(this);
-        DefaultBiomeFeatures.func_222288_h(this);
-        DefaultBiomeFeatures.func_222282_l(this);
-        DefaultBiomeFeatures.func_222296_u(this);
-        DefaultBiomeFeatures.func_222342_U(this);
-        DefaultBiomeFeatures.func_222348_W(this);
-        DefaultBiomeFeatures.func_222315_Z(this);
-        DefaultBiomeFeatures.func_222311_aa(this);
-        DefaultBiomeFeatures.func_222337_am(this);
+        DefaultBiomeFeatures.addOceanCarvers(this);
+        DefaultBiomeFeatures.addDefaultStructures(this);
+        DefaultBiomeFeatures.addDefaultLakes(this);
+        DefaultBiomeFeatures.addDungeons(this);
+        DefaultBiomeFeatures.addMineables(this);
+        DefaultBiomeFeatures.addDefaultOres(this);
+        DefaultBiomeFeatures.addDefaultDisks(this);
+        DefaultBiomeFeatures.addWaterBiomeOakTrees(this);
+        DefaultBiomeFeatures.addDefaultFlowers(this);
+        DefaultBiomeFeatures.addDefaultGrass(this);
+        DefaultBiomeFeatures.addDefaultMushrooms(this);
+        DefaultBiomeFeatures.addDefaultVegetation(this);
+        DefaultBiomeFeatures.addSprings(this);
 
         addFeature(
-                GenerationStage.Decoration.VEGETAL_DECORATION,
-                func_222280_a(
-                        Feature.RANDOM_FEATURE_WITH_CONFIG,
-                        new SingleRandomFeature(
+                GenerationStep.Feature.VEGETAL_DECORATION,
+                configureFeature(
+                        Feature.SIMPLE_RANDOM_SELECTOR,
+                        new SimpleRandomFeatureConfig(
                                 new Feature[]{Feature.CORAL_TREE, Feature.CORAL_CLAW, Feature.CORAL_MUSHROOM},
-                                new IFeatureConfig[]{IFeatureConfig.NO_FEATURE_CONFIG, IFeatureConfig.NO_FEATURE_CONFIG, IFeatureConfig.NO_FEATURE_CONFIG}),
-                        Placement.field_215038_x,
-                        new TopSolidWithNoiseConfig(20, 400.0D, 0.0D, net.minecraft.world.gen.Heightmap.Type.OCEAN_FLOOR_WG)));
-        DefaultBiomeFeatures.func_222309_aj(this);
-
+                                new FeatureConfig[]{
+                                        FeatureConfig.DEFAULT, FeatureConfig.DEFAULT, FeatureConfig.DEFAULT}),
+                        Decorator.TOP_SOLID_HEIGHTMAP_NOISE_BIASED,
+                        new TopSolidHeightmapNoiseBiasedDecoratorConfig(
+                                20, 400.0D, 0.0D, Heightmap.Type.OCEAN_FLOOR_WG)));
+        DefaultBiomeFeatures.addSeagrass(this);
         addFeature(
-                GenerationStage.Decoration.VEGETAL_DECORATION,
-                func_222280_a(
+                GenerationStep.Feature.VEGETAL_DECORATION,
+                configureFeature(
                         Feature.SEA_PICKLE,
-                        new CountConfig(20),
-                        Placement.field_215026_l, new ChanceConfig(16)));
-        DefaultBiomeFeatures.func_222297_ap(this);
-
-        addSpawn(
-                EntityClassification.WATER_CREATURE,
-                new SpawnListEntry(EntityType.SQUID, 10, 4, 4));
-        addSpawn(
-                EntityClassification.WATER_CREATURE,
-                new SpawnListEntry(EntityType.PUFFERFISH, 15, 1, 3));
-        addSpawn(
-                EntityClassification.WATER_CREATURE,
-                new SpawnListEntry(EntityType.TROPICAL_FISH, 25, 8, 8));
-        addSpawn(
-                EntityClassification.WATER_CREATURE,
-                new SpawnListEntry(EntityType.DOLPHIN, 2, 1, 2));
-        addSpawn(
-                EntityClassification.AMBIENT,
-                new SpawnListEntry(EntityType.BAT, 10, 8, 8));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.SPIDER, 100, 4, 4));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.ZOMBIE, 95, 4, 4));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.ZOMBIE_VILLAGER, 5, 1, 1));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.SKELETON, 100, 4, 4));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.CREEPER, 100, 4, 4));
-        addSpawn(
-                EntityClassification.MONSTER
-                , new SpawnListEntry(EntityType.SLIME, 100, 4, 4));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.ENDERMAN, 10, 1, 4));
-        addSpawn(
-                EntityClassification.MONSTER,
-                new SpawnListEntry(EntityType.WITCH, 5, 1, 1));
+                        new SeaPickleFeatureConfig(20),
+                        Decorator.CHANCE_TOP_SOLID_HEIGHTMAP,
+                        new ChanceDecoratorConfig(16)));
+        DefaultBiomeFeatures.addFrozenTopLayer(this);
+        addSpawn(EntityCategory.WATER_CREATURE, new SpawnEntry(EntityType.SQUID, 10, 4, 4));
+        addSpawn(EntityCategory.WATER_CREATURE, new SpawnEntry(EntityType.PUFFERFISH, 15, 1, 3));
+        addSpawn(EntityCategory.WATER_CREATURE, new SpawnEntry(EntityType.TROPICAL_FISH, 25, 8, 8));
+        addSpawn(EntityCategory.WATER_CREATURE, new SpawnEntry(EntityType.DOLPHIN, 2, 1, 2));
+        addSpawn(EntityCategory.AMBIENT, new SpawnEntry(EntityType.BAT, 10, 8, 8));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SPIDER, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 95, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE_VILLAGER, 5, 1, 1));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SKELETON, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.CREEPER, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SLIME, 100, 4, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ENDERMAN, 10, 1, 4));
+        addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.WITCH, 5, 1, 1));
     }
 }

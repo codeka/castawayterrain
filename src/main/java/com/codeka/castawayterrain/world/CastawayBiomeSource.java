@@ -8,22 +8,21 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.noise.SimplexNoiseSampler;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.biome.WarmOceanBiome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.SimplexNoiseGenerator;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.feature.StructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
-public class CastawayBiomeProvider extends BiomeProvider {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private final SimplexNoiseGenerator noise;
+import static net.minecraft.world.gen.GenerationStep.Feature.UNDERGROUND_ORES;
+
+public class CastawayBiomeSource extends BiomeSource {
+    private static final Logger L = LogManager.getLogger();
+    private final SimplexNoiseSampler noise;
 
     private final double TEMPERATURE_SCALE = 700;
     private final double DEPTH_SCALE = 200;
@@ -55,21 +54,21 @@ public class CastawayBiomeProvider extends BiomeProvider {
             .put(Temperature.WARM, new Biome[] { Biomes.DEEP_WARM_OCEAN, Biomes.WARM_OCEAN})
             .build();
 
-    public CastawayBiomeProvider(long seed) {
-        noise = new SimplexNoiseGenerator(new Random(seed));
+    public CastawayBiomeSource(long seed) {
+        noise = new SimplexNoiseSampler(new Random(seed));
 
         // Remove all underground ores from all our biomes. TODO: how to only do this for our world type?
         for (Biome b : allBiomes) {
-            b.getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).clear();
+            b.getFeaturesForStep(UNDERGROUND_ORES).clear();
         }
     }
 
     @Override
     public Biome getBiome(int x, int y) {
-        double t = (1.0 + noise.getValue((double) x / TEMPERATURE_SCALE, (double) y / TEMPERATURE_SCALE)) * 0.5;
-        double d = (1.0 + noise.getValue((double) x / DEPTH_SCALE, (double) y / DEPTH_SCALE)) * 0.5;
+        double t = (1.0 + noise.sample((double) x / TEMPERATURE_SCALE, (double) y / TEMPERATURE_SCALE)) * 0.5;
+        double d = (1.0 + noise.sample((double) x / DEPTH_SCALE, (double) y / DEPTH_SCALE)) * 0.5;
        // double v = (1.0 + noise.getValue((double) x / VOLCANO_SCALE, (double) y / VOLCANO_SCALE)) * 0.5;
-        double rand = noise.getValue((double) x / NOISE_SCALE, (double) y / NOISE_SCALE);
+        double rand = noise.sample((double) x / NOISE_SCALE, (double) y / NOISE_SCALE);
         rand = 1.0 + (rand * NOISE_VALUE);
 
         Temperature temp;
@@ -112,7 +111,8 @@ public class CastawayBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public Biome[] getBiomes(int x, int z, int width, int length, boolean cacheFlag) {
+    public Biome[] sampleBiomes(int x, int z, int width, int length, boolean cacheFlag) {
+        L.info("sampleBiomes(" + x + "," + z + ")");
         Biome[] biomes = new Biome[width * length];
         for (int dx = 0; dx < width; dx++) {
             for (int dy = 0; dy < length; dy++) {
@@ -123,7 +123,7 @@ public class CastawayBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public Set<Biome> getBiomesInSquare(int centerX, int centerZ, int sideLength) {
+    public Set<Biome> getBiomesInArea(int centerX, int centerZ, int sideLength) {
         int i = centerX - sideLength >> 2;
         int j = centerZ - sideLength >> 2;
         int k = centerX + sideLength >> 2;
@@ -131,20 +131,19 @@ public class CastawayBiomeProvider extends BiomeProvider {
         int i1 = k - i + 1;
         int j1 = l - j + 1;
         Set<Biome> set = Sets.newHashSet();
-        Collections.addAll(set, getBiomes(i, j, i1, j1, true));
+        Collections.addAll(set, sampleBiomes(i, j, i1, j1, true));
         return set;
     }
 
-    @Nullable
     @Override
-    public BlockPos findBiomePosition(int x, int z, int range, List<Biome> biomes, Random random) {
+    public BlockPos locateBiome(int x, int z, int range, List<Biome> biomes, Random random) {
         int i = x - range >> 2;
         int j = z - range >> 2;
         int k = x + range >> 2;
         int l = z + range >> 2;
         int i1 = k - i + 1;
         int j1 = l - j + 1;
-        Biome[] abiome = getBiomes(i, j, i1, j1, true);
+        Biome[] abiome = sampleBiomes(i, j, i1, j1, true);
         BlockPos blockpos = null;
         int k1 = 0;
 
@@ -164,10 +163,10 @@ public class CastawayBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public boolean hasStructure(Structure<?> structure) {
-        return this.hasStructureCache.computeIfAbsent(structure, (s) -> {
+    public boolean hasStructureFeature(StructureFeature<?> structure) {
+        return structureFeatures.computeIfAbsent(structure, (s) -> {
             for(Biome biome : allBiomes) {
-                if (biome.hasStructure(s)) {
+                if (biome.hasStructureFeature(s)) {
                     return true;
                 }
             }
@@ -177,13 +176,13 @@ public class CastawayBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public Set<BlockState> getSurfaceBlocks() {
-        if (this.topBlocksCache.isEmpty()) {
+    public Set<BlockState> getTopMaterials() {
+        if (topMaterials.isEmpty()) {
             for(Biome biome : allBiomes) {
-                this.topBlocksCache.add(biome.getSurfaceBuilderConfig().getTopMaterial());
+                topMaterials.add(biome.getSurfaceConfig().getTopMaterial());
             }
         }
 
-        return this.topBlocksCache;
+        return topMaterials;
     }
 }

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "castawayterrain",
+  "version": "${version}",
+
+  "name": "Castaway Terrain",
+  "description": "Adds a 'Castaway' world type that generates volcanic islands in an endless ocean.",
+  "authors": [
+    "codekaMC"
+  ],
+  "contact": {
+    "homepage": "https://github.com/codeka/castawayterrain/",
+    "sources": "https://github.com/codeka/castawayterrain"
+  },
+
+  "license": "MIT",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.codeka.castawayterrain.CastawayTerrainMod"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}

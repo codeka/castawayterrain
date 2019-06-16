@@ -1,26 +1,33 @@
 package com.codeka.castawayterrain.biome;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.SimplexNoiseGenerator;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraft.util.math.noise.SimplexNoiseSampler;
+import net.minecraft.world.gen.surfacebuilder.SurfaceConfig;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-public class VolcanoIslandSurfaceBuilderConfig extends SurfaceBuilderConfig {
-    private Map<Long, SimplexNoiseGenerator> noise = new TreeMap<>();
+public class VolcanoIslandSurfaceBuilderConfig implements SurfaceConfig {
+    private Map<Long, SimplexNoiseSampler> noise = new TreeMap<>();
 
-    public VolcanoIslandSurfaceBuilderConfig() {
-        super(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState());
-    }
-
-    public synchronized SimplexNoiseGenerator getNoiseGenerator(long seed) {
-        SimplexNoiseGenerator noiseGenerator = noise.get(seed);
+    public synchronized SimplexNoiseSampler getNoiseGenerator(long seed) {
+        SimplexNoiseSampler noiseGenerator = noise.get(seed);
         if (noiseGenerator == null) {
-            noiseGenerator = new SimplexNoiseGenerator(new Random(seed));
+            noiseGenerator = new SimplexNoiseSampler(new Random(seed));
             noise.put(seed, noiseGenerator);
         }
         return noiseGenerator;
+    }
+
+    @Override
+    public BlockState getTopMaterial() {
+        return Blocks.GRASS_BLOCK.getDefaultState();
+    }
+
+    @Override
+    public BlockState getUnderMaterial() {
+        return Blocks.DIRT.getDefaultState();
     }
 }
