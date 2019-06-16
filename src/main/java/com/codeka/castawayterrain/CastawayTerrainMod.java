@@ -53,9 +53,6 @@ public class CastawayTerrainMod implements ModInitializer {
 
     private static void registerBiome(String name, Biome biome) {
         Registry.register(Registry.BIOME, name, biome);
-
-//        BiomeManager.addSpawnBiome(biome);
-//        BiomeDictionary.addTypes(biome, BiomeDictionary.Type.MOUNTAIN); // TODO??
    }
 
     /**
@@ -98,7 +95,6 @@ public class CastawayTerrainMod implements ModInitializer {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) {
-            L.info("CastawayGeneratorFactory.invoke()");
             if(args.length == 3 &&
                     args[0] instanceof World &&
                     args[1] instanceof CastawayBiomeSource &&

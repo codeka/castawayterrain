@@ -57,7 +57,6 @@ public class Volcano {
             volcanoCenterY += randY * CastawayConfig.instance.volcano_size * 6;
         }
 
-        L.info("isCenter(" + x + ", " + y + ") == " + Math.round(volcanoCenterX) + ", " + Math.round(volcanoCenterY));
         return x == Math.round(volcanoCenterX) && y == Math.round(volcanoCenterY);
     }
 }

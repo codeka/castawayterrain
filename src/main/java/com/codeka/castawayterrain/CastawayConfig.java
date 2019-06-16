@@ -18,4 +18,7 @@ public class CastawayConfig {
 
     @Comment("Size of the volcano island (including surround shallow ocean) in blocks. Changing this will basically scale everything up/down.")
     public int volcano_size = 128;
+
+    @Comment("Disable ore-gen. Useful for skyblock-style worlds where you want to get resources some other way.")
+    public boolean disable_ore_gen = true;
 }

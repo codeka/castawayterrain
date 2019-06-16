@@ -61,8 +61,10 @@ public class CastawayBiomeSource extends BiomeSource {
         }
 
         // Remove all underground ores from all our biomes. TODO: how to only do this for our world type?
-        for (Biome b : allBiomes) {
-            b.getFeaturesForStep(UNDERGROUND_ORES).clear();
+        if (CastawayConfig.instance.disable_ore_gen) {
+            for (Biome b : allBiomes) {
+                b.getFeaturesForStep(UNDERGROUND_ORES).clear();
+            }
         }
     }
 
