@@ -1,7 +1,9 @@
 package com.codeka.castawayterrain.biome;
 
+import com.codeka.castawayterrain.block.ModBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -31,16 +33,16 @@ public class VolcanoIslandSurfaceBuilder extends SurfaceBuilder<VolcanoIslandSur
             // lava part, all the way down to bedrock
             for(int y = startHeight; y > 0; y--) {
                 blockPos.set(chunkX, y, chunkZ);
-               // if (noise < 0.05 && y == startHeight /*- 1*/) {
-               //     chunkIn.setBlockState(blockPos, VolcanoSmokerBlock.BLOCK.getDefaultState(), false);
-               //     BlockEntity be = VolcanoSmokerBlock.BLOCK.getDefaultState().createTileEntity();
-               //     if (te != null) {
-               //         blockPos.setPos(x, y, z);
-               //         chunkIn.addTileEntity(blockPos, te);
-               //     }
-               // } else {
+                if (noise < 0.05 && y == startHeight - 1) {
+                    chunkIn.setBlockState(blockPos, ModBlocks.VOLCANO_SMOKER_BLOCK.getDefaultState(), false);
+                    BlockEntity be = ModBlocks.VOLCANO_SMOKER_BLOCK.createBlockEntity(null);
+                    if (be != null) {
+                        blockPos.set(x, y, z);
+                        chunkIn.setBlockEntity(blockPos, be);
+                    }
+                } else {
                     chunkIn.setBlockState(blockPos, Blocks.LAVA.getDefaultState(), false);
-               // }
+                }
             }
         } else if (noise < 0.7) {
             // mountain part
