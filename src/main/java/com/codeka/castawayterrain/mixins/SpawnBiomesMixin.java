@@ -1,5 +1,6 @@
 package com.codeka.castawayterrain.mixins;
 
+import com.codeka.castawayterrain.biome.ModBiomes;
 import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import net.minecraft.world.biome.Biome;
@@ -16,10 +17,6 @@ import java.util.List;
 public class SpawnBiomesMixin {
     @Inject(at = @At("HEAD"), cancellable = true, method = "getSpawnBiomes")
     private void getSpawnBiomes(CallbackInfoReturnable<List<Biome>> info) {
-        List<Biome> toReturn = new ArrayList<>();
-        toReturn.add(VolcanoBeachBiome.BIOME);
-        toReturn.add(VolcanoIslandBiome.BIOME);
-
-        info.setReturnValue(toReturn);
+        info.setReturnValue(ModBiomes.all());
     }
 }

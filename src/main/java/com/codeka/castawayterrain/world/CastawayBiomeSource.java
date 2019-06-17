@@ -1,10 +1,7 @@
 package com.codeka.castawayterrain.world;
 
 import com.codeka.castawayterrain.CastawayConfig;
-import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
-import com.codeka.castawayterrain.biome.Volcano;
-import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
-import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
+import com.codeka.castawayterrain.biome.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
@@ -13,6 +10,7 @@ import net.minecraft.util.math.noise.SimplexNoiseSampler;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.feature.StructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +53,7 @@ public class CastawayBiomeSource extends BiomeSource {
         noise = new SimplexNoiseSampler(new Random(seed));
 
         allBiomes = new HashSet<>();
-        allBiomes.addAll(Arrays.asList(VolcanoIslandBiome.BIOME, VolcanoBeachBiome.BIOME, ShallowWarmOceanBiome.BIOME));
+        allBiomes.addAll(ModBiomes.all());
         for (Map.Entry<Temperature, Biome[]> entry : biomesByDepth.entrySet()) {
             allBiomes.addAll(Arrays.asList(entry.getValue()));
         }
@@ -92,13 +90,20 @@ public class CastawayBiomeSource extends BiomeSource {
         double distanceToCenter = Volcano.distanceToCenter(noise, x, y);
         if (distanceToCenter < CastawayConfig.instance.volcano_size * 0.3) {
             // The actual volcano part of the island (trees + mountain)
-            return VolcanoIslandBiome.BIOME;
+            if (CastawayConfig.instance.island_types.size() > 1) {
+                int n = Volcano.getVolcanoRandom(noise, x, y).nextInt(CastawayConfig.instance.island_types.size());
+                return getBiomeByConfigName(CastawayConfig.instance.island_types.get(n));
+            } else if (CastawayConfig.instance.island_types.size() == 1) {
+                return getBiomeByConfigName(CastawayConfig.instance.island_types.get(0));
+            } else {
+                return getBiomeByConfigName("jungle");
+            }
         } else if (distanceToCenter < CastawayConfig.instance.volcano_size * 0.5) {
             // Surround the volcano by beach.
-            return VolcanoBeachBiome.BIOME;
+            return ModBiomes.VOLCANO_BEACH;
         } else if (distanceToCenter < CastawayConfig.instance.volcano_size) {
             // And the beach by "shallow warm ocean".
-            return ShallowWarmOceanBiome.BIOME;
+            return ModBiomes.SHALLOW_WARN_OCEAN;
         }
 
         Biome[] biomes = biomesByDepth.get(temp);
@@ -112,6 +117,17 @@ public class CastawayBiomeSource extends BiomeSource {
             return biomes[1];
         } else {
             return biomes[0];
+        }
+    }
+
+    private static Biome getBiomeByConfigName(String name) {
+        switch(name.toLowerCase()) {
+            case "bamboo":
+                return ModBiomes.BAMBOO_VOLCANO;
+            case "forest":
+                return ModBiomes.FOREST_VOLCANO;
+            default:
+                return ModBiomes.JUNGLE_VOLCANO;
         }
     }
 

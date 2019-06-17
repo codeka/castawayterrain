@@ -16,8 +16,6 @@ import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
  * This is a cut'n'paste of {@link net.minecraft.world.biome.OceanWarmBiome}, but shallower.
  */
 public class ShallowWarmOceanBiome extends Biome {
-    public static final ShallowWarmOceanBiome BIOME = new ShallowWarmOceanBiome();
-
     public ShallowWarmOceanBiome() {
         super(new Settings()
                 .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.SAND_SAND_UNDERWATER_CONFIG)

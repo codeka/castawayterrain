@@ -1,5 +1,6 @@
 package com.codeka.castawayterrain;
 
+import com.codeka.castawayterrain.biome.ModBiomes;
 import com.codeka.castawayterrain.biome.ShallowWarmOceanBiome;
 import com.codeka.castawayterrain.biome.VolcanoBeachBiome;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
@@ -39,10 +40,7 @@ public class CastawayTerrainMod implements ModInitializer {
     public void onInitialize() {
         L.info("Castaway Terrain initializing...");
 
-        registerBiome("volcano_island", VolcanoIslandBiome.BIOME);
-        registerBiome("volcano_beach", VolcanoBeachBiome.BIOME);
-        registerBiome("shallow_warm_ocean", ShallowWarmOceanBiome.BIOME);
-
+        ModBiomes.init();
         ModBlocks.init();
 
         CASTAWAY_LEVEL_TYPE = CastawayLevelType.getType();
@@ -50,10 +48,6 @@ public class CastawayTerrainMod implements ModInitializer {
         CASTAWAY = factory.getChunkGeneratorType(CastawayChunkGeneratorConfig::new);
         Registry.register(Registry.CHUNK_GENERATOR_TYPE, "castawayterrain:castaway", CASTAWAY);
     }
-
-    private static void registerBiome(String name, Biome biome) {
-        Registry.register(Registry.BIOME, name, biome);
-   }
 
     /**
      * This is a bit hacky,

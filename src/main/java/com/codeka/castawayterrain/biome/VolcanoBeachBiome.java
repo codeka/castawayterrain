@@ -8,8 +8,6 @@ import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 public class VolcanoBeachBiome extends Biome {
-    public static final VolcanoBeachBiome BIOME = new VolcanoBeachBiome();
-
     public VolcanoBeachBiome() {
         super(new Biome.Settings()
                 .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.SAND_CONFIG)
@@ -27,19 +25,14 @@ public class VolcanoBeachBiome extends Biome {
         addStructureFeature(Feature.BURIED_TREASURE, new BuriedTreasureFeatureConfig(0.01F));
         addStructureFeature(Feature.SHIPWRECK, new ShipwreckFeatureConfig(true));
 
-        DefaultBiomeFeatures.addLandCarvers(this);
         DefaultBiomeFeatures.addDefaultStructures(this);
         DefaultBiomeFeatures.addDefaultLakes(this);
-        DefaultBiomeFeatures.addDungeons(this);
-        DefaultBiomeFeatures.addMineables(this);
-        DefaultBiomeFeatures.addDefaultOres(this);
-        DefaultBiomeFeatures.addDefaultDisks(this);
         DefaultBiomeFeatures.addDefaultFlowers(this);
         DefaultBiomeFeatures.addDefaultGrass(this);
         DefaultBiomeFeatures.addDefaultMushrooms(this);
         DefaultBiomeFeatures.addDefaultVegetation(this);
         DefaultBiomeFeatures.addSprings(this);
-        DefaultBiomeFeatures.addFrozenTopLayer(this);
+
         addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.TURTLE, 5, 2, 5));
         addSpawn(EntityCategory.AMBIENT, new SpawnEntry(EntityType.BAT, 10, 8, 8));
         addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.SPIDER, 100, 4, 4));

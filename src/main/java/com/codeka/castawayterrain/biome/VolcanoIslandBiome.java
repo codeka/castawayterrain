@@ -7,12 +7,15 @@ import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
 
 public class VolcanoIslandBiome extends Biome {
-
-    public static final VolcanoIslandBiome BIOME = new VolcanoIslandBiome();
-
     private static final VolcanoIslandSurfaceBuilderConfig SURFACE_BUILDER_CONFIG = new VolcanoIslandSurfaceBuilderConfig();
 
-    VolcanoIslandBiome() {
+    public enum VegitationType {
+        FOREST,
+        JUNGLE,
+        BAMBOO_FOREST,
+    }
+
+    VolcanoIslandBiome(VegitationType vegitationType) {
         super(new Biome.Settings()
                 .surfaceBuilder(new ConfiguredSurfaceBuilder<>(
                         new VolcanoIslandSurfaceBuilder(SURFACE_BUILDER_CONFIG), new VolcanoIslandSurfaceBuilderConfig()))
@@ -28,12 +31,29 @@ public class VolcanoIslandBiome extends Biome {
                 .waterFogColor(270131)
                 .parent(null));
 
-        DefaultBiomeFeatures.addForestFlowers(this);
-        DefaultBiomeFeatures.addForestTrees(this);
-        DefaultBiomeFeatures.addDefaultFlowers(this);
-        DefaultBiomeFeatures.addForestGrass(this);
-        DefaultBiomeFeatures.addDefaultMushrooms(this);
-        DefaultBiomeFeatures.addDefaultVegetation(this);
+        switch (vegitationType) {
+            case JUNGLE:
+                DefaultBiomeFeatures.addJungleTrees(this);
+                DefaultBiomeFeatures.addJungleGrass(this);
+                DefaultBiomeFeatures.addJungleVegetation(this);
+                break;
+            case FOREST:
+                DefaultBiomeFeatures.addForestFlowers(this);
+                DefaultBiomeFeatures.addForestTrees(this);
+                DefaultBiomeFeatures.addDefaultFlowers(this);
+                DefaultBiomeFeatures.addForestGrass(this);
+                DefaultBiomeFeatures.addDefaultMushrooms(this);
+                DefaultBiomeFeatures.addDefaultVegetation(this);
+                break;
+            case BAMBOO_FOREST:
+                DefaultBiomeFeatures.addBamboo(this);
+                DefaultBiomeFeatures.addBambooJungleTrees(this);
+                DefaultBiomeFeatures.addDefaultMushrooms(this);
+                DefaultBiomeFeatures.addDefaultVegetation(this);
+                DefaultBiomeFeatures.addDefaultFlowers(this);
+                break;
+        }
+
 
         addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.SHEEP, 12, 4, 4));
         addSpawn(EntityCategory.CREATURE, new SpawnEntry(EntityType.PIG, 10, 4, 4));

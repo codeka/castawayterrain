@@ -1,6 +1,7 @@
 package com.codeka.castawayterrain.world;
 
 import com.codeka.castawayterrain.CastawayConfig;
+import com.codeka.castawayterrain.biome.ModBiomes;
 import com.codeka.castawayterrain.biome.Volcano;
 import com.codeka.castawayterrain.biome.VolcanoIslandBiome;
 import net.minecraft.util.math.ChunkPos;
@@ -39,7 +40,7 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
         Biome[] biomes = chunk.getBiomeArray();
         boolean hasVolcano = false;
         for (Biome biome : biomes) {
-            if (biome == VolcanoIslandBiome.BIOME) {
+            if (ModBiomes.isVolcano(biome)) {
                 hasVolcano = true;
                 break;
             }
@@ -71,7 +72,7 @@ public class CastawayChunkGenerator extends OverworldChunkGenerator {
         for(int x = 0; x < 16; ++x) {
             for(int z = 0; z < 16; ++z) {
                 Biome biome = biomes[z * 16 + x];
-                if (biome == VolcanoIslandBiome.BIOME) {
+                if (ModBiomes.isVolcano(biome)) {
                     int px = startX + x;
                     int pz = startZ + z;
 
