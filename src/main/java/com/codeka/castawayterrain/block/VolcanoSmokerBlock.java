@@ -8,12 +8,12 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.BlockView;
 
 public class VolcanoSmokerBlock extends Block implements BlockEntityProvider {
-    VolcanoSmokerBlock() {
-        super(Block.Settings.of(Material.STONE, MaterialColor.STONE));
-    }
+  VolcanoSmokerBlock() {
+    super(Block.Settings.of(Material.STONE, MaterialColor.STONE));
+  }
 
-    @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
-        return new VolcanoSmokerBlockEntity();
-    }
+  @Override
+  public BlockEntity createBlockEntity(BlockView blockView) {
+    return new VolcanoSmokerBlockEntity();
+  }
 }

@@ -1,14 +1,14 @@
-
 plugins {
-    id 'fabric-loom' version '0.2.3-SNAPSHOT'
+  // https://maven.fabricmc.net/net/fabricmc/fabric-loom/
+  id 'fabric-loom' version '0.2.7-SNAPSHOT'
 }
 
-repositories {
-    maven {
-        name = 'Cottom'
-        url = 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
-    }
-}
+//repositories {
+//  maven {
+//    name = 'Cottom'
+//    url = 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
+//  }
+//}
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -20,33 +20,33 @@ minecraft {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-    modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-    modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modCompile "io.github.cottonmc:cotton:0.7.5+1.14.2-SNAPSHOT"
+  minecraft "com.mojang:minecraft:${project.minecraft_version}"
+  mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+  modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+  modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+//  modCompile "io.github.cottonmc:cotton:0.7.5+1.14.2-SNAPSHOT"
 }
 
 processResources {
-    inputs.property "version", project.version
+  inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
+  from(sourceSets.main.resources.srcDirs) {
+    include "fabric.mod.json"
+    expand "version": project.version
+  }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
-    }
+  from(sourceSets.main.resources.srcDirs) {
+    exclude "fabric.mod.json"
+  }
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 // if it is present. If you remove this task, sources will not be generated.
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+  classifier = "sources"
+  from sourceSets.main.allSource
 }
 
 jar {
-    from "LICENSE"
+  from "LICENSE"
 }

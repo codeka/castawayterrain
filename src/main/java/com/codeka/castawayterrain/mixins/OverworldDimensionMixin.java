@@ -16,18 +16,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(OverworldDimension.class)
 public abstract class OverworldDimensionMixin extends Dimension {
-    public OverworldDimensionMixin(World world, DimensionType dimensionType) {
-        super(world, dimensionType);
-    }
+  public OverworldDimensionMixin(World world, DimensionType dimensionType) {
+    super(world, dimensionType, 7.0f);
+  }
 
-    /**
-     * Add a check to see if the generator type is set to castaway, and return our chunk generator instead.
-     */
-    @Inject(at = @At("HEAD"), cancellable = true, method="createChunkGenerator")
-    public void createChunkGenerator(CallbackInfoReturnable<ChunkGenerator<? extends ChunkGeneratorConfig>> callbackInfo) {
-        if (world.getLevelProperties().getGeneratorType() == CastawayTerrainMod.CASTAWAY_LEVEL_TYPE) {
-            callbackInfo.setReturnValue(new CastawayChunkGenerator(world, new CastawayChunkGeneratorConfig()));
-            callbackInfo.cancel();
-        }
+  /**
+   * Add a check to see if the generator type is set to castaway, and return our chunk generator instead.
+   */
+  @Inject(at = @At("HEAD"), cancellable = true, method = "createChunkGenerator")
+  public void createChunkGenerator(CallbackInfoReturnable<ChunkGenerator<? extends ChunkGeneratorConfig>> callbackInfo) {
+    if (world.getLevelProperties().getGeneratorType() == CastawayTerrainMod.CASTAWAY_LEVEL_TYPE) {
+      callbackInfo.setReturnValue(new CastawayChunkGenerator(world, new CastawayChunkGeneratorConfig()));
+      callbackInfo.cancel();
     }
+  }
 }

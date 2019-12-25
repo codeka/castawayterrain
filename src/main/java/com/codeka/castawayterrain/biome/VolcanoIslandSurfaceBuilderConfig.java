@@ -10,24 +10,24 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public class VolcanoIslandSurfaceBuilderConfig implements SurfaceConfig {
-    private Map<Long, SimplexNoiseSampler> noise = new TreeMap<>();
+  private Map<Long, SimplexNoiseSampler> noise = new TreeMap<>();
 
-    public synchronized SimplexNoiseSampler getNoiseGenerator(long seed) {
-        SimplexNoiseSampler noiseGenerator = noise.get(seed);
-        if (noiseGenerator == null) {
-            noiseGenerator = new SimplexNoiseSampler(new Random(seed));
-            noise.put(seed, noiseGenerator);
-        }
-        return noiseGenerator;
+  public synchronized SimplexNoiseSampler getNoiseGenerator(long seed) {
+    SimplexNoiseSampler noiseGenerator = noise.get(seed);
+    if (noiseGenerator == null) {
+      noiseGenerator = new SimplexNoiseSampler(new Random(seed));
+      noise.put(seed, noiseGenerator);
     }
+    return noiseGenerator;
+  }
 
-    @Override
-    public BlockState getTopMaterial() {
-        return Blocks.GRASS_BLOCK.getDefaultState();
-    }
+  @Override
+  public BlockState getTopMaterial() {
+    return Blocks.GRASS_BLOCK.getDefaultState();
+  }
 
-    @Override
-    public BlockState getUnderMaterial() {
-        return Blocks.DIRT.getDefaultState();
-    }
+  @Override
+  public BlockState getUnderMaterial() {
+    return Blocks.DIRT.getDefaultState();
+  }
 }
